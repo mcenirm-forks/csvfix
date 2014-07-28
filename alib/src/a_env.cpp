@@ -16,10 +16,6 @@
 #include <map>
 #include <cstdlib>
 
-// need win api if doing our own globbing on windows
-#include "a_win.h"
-#include "a_dir.h"
-
 using std::string;
 using std::vector;
 
