@@ -36,7 +36,7 @@ class FileSplitCommand : public Command {
 		std::string MakeKey( const CSVRow & row );
 
 		std::string mDir, mFilePrefix, mFileExt, mCurrentFile;
-		ALib::Dictionary <std::string> mDict;
+        std::map <std::string, std::string> mDict;
 		std::vector <unsigned int> mColIndex;
 		unsigned int mFileNo;
 		std::ofstream mOutFile;
