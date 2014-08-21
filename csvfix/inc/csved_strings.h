@@ -94,6 +94,7 @@ const char * const CMD_XMLR		= "read_xml";
 
 const char * const FLAG_ACTION	= "-a";
 const char * const FLAG_ASC		= "-a";
+const char * const FLAG_ALL		= "-a";
 const char * const FLAG_ARG		= "-arg";
 const char * const FLAG_AVG		= "-avg";
 const char * const FLAG_ACTKEEP	= "-k";
@@ -215,6 +216,7 @@ const char * const FLAG_RTIME	= "-rt";
 const char * const FLAG_RULER	= "-ru";
 const char * const FLAG_RALIGN	= "-ra";
 const char * const FLAG_SEP		= "-s";
+const char * const FLAG_SINGLE		= "-s";
 const char * const FLAG_SIZE	= "-siz";
 const char * const FLAG_SMARTQ	= "-smq";
 const char * const FLAG_SQLQ	= "-sql";
