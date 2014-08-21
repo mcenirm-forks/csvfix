@@ -11,8 +11,9 @@
 
 #include "a_base.h"
 #include "csved_command.h"
-#include "a_dict.h"
 #include <fstream>
+#include <map>
+#include <string>
 
 namespace CSVED {
 
