@@ -1,1 +1,3 @@
 $CSVED squash -f 1 -n 2 data/squash1.csv
+$CSVED squash -f 1,2 -n 3 data/squash2.csv
+$CSVED squash -f 1,2 -n 3 -rn data/squash3.csv

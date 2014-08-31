@@ -71,6 +71,7 @@ _OBJS = csved_atable.o \
 		csved_sparse.o \
 		csved_split.o \
 		csved_sql.o \
+		csved_squash.o \
 		csved_stat.o \
 		csved_sum.o \
 		csved_template.o \
