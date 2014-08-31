@@ -1,0 +1,1 @@
+$CSVED squash -f 1 -n 2 data/squash1.csv
