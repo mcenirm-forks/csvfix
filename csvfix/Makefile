@@ -36,6 +36,7 @@ _OBJS = csved_atable.o \
 		csved_dsv.o \
 		csved_echo.o \
 		csved_edit.o \
+		csved_erase.o \
 		csved_escape.o \
 		csved_eval.o \
 		csved_evalvars.o \
@@ -64,6 +65,7 @@ _OBJS = csved_atable.o \
 		csved_put.o \
 		csved_readmulti.o \
 		csved_rmnewline.o \
+		csved_rsort.o \
 		csved_rules.o \
 		csved_seq.o \
 		csved_shuffle.o \
