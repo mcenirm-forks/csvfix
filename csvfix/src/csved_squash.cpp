@@ -75,7 +75,7 @@ class RealSquashValues : public SquashValues {
 
         RealSquashValues( const std::string & nn ) : mNotNum( DBL_MAX ) {
             if ( nn != "" ) {
-                if ( ! ALib::IsReal( nn ) ) {
+                if ( ! ALib::IsNumber( nn ) ) {
                     CSVTHROW( "Need real number value for " << FLAG_NONUM );
                 }
                 mNotNum = ALib::ToReal( nn );
@@ -84,7 +84,7 @@ class RealSquashValues : public SquashValues {
 
         virtual void Add( unsigned int idx, const std::string & val ) {
             double n;
-            if ( ! ALib::IsReal( val ) ) {
+            if ( ! ALib::IsNumber( val ) ) {
                 if ( mNotNum == DBL_MAX ) {
                     CSVTHROW( "Non-real number value " << val << " for numeric field" );
                 }
@@ -93,7 +93,6 @@ class RealSquashValues : public SquashValues {
             else {
                 n = ALib::ToReal( val );
             }
-
             if ( idx >= mValues.size() ) {
                 mValues.push_back( n );
             }
