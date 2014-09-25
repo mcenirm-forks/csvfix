@@ -11,6 +11,8 @@
 
 #include "a_base.h"
 #include "csved_command.h"
+#include <string>
+#include <vector>
 
 namespace CSVED {
 
@@ -28,7 +30,8 @@ class StatCommand : public Command {
 	private:
 
 		void OutputStats( IOManager & io, const std::string & fname,
-							int lines, int maxf, int minf );
+							int lines, int maxf, int minf,
+							const std::vector <int> & lengths );
 };
 
 }
