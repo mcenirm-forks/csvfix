@@ -113,6 +113,8 @@ bool RegEx::Pos :: Found() const {
 //---------------------------------------------------------------------------
 // Bitmap used to represent char ranges, one bit for each character in a
 // range. Only chars with ASCII codes 0 to 127 are supported.
+//
+// Note: Now extended experimentally to codes 0 to 255.
 //---------------------------------------------------------------------------
 
 class RegEx::CharBitMap {
@@ -164,7 +166,7 @@ class RegEx::CharBitMap {
 
 	private:
 
-		enum { MAXSIZE = 128 };
+		enum { MAXSIZE = 256 };
 		std::bitset <MAXSIZE> mBits;
 };
 
