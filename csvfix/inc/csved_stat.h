@@ -16,6 +16,32 @@
 
 namespace CSVED {
 
+class FileStats {
+
+    public:
+
+    private:
+
+        enum class FieldType {
+            Empty, String, Number, Real, Date
+        };
+
+
+        struct FieldRecord {
+            std::string mName;
+            FieldType mType;
+            int mMinLen, mMaxLen;
+        };
+
+        typedef std::vector <FieldRecord> FieldList;
+        typedef std::vector <std::string> FileHeader;
+
+        std::string mFileName;
+        FileHeader mFieldNames;
+        FieldList mFields;
+};
+
+
 class StatCommand : public Command {
 
 
