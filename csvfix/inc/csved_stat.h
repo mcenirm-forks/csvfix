@@ -20,6 +20,12 @@ class FileStats {
 
     public:
 
+        FileStats( const std::string & filename,
+                    const CSVRow & fieldnames );
+
+        void AddRow( const CSVRow & row );
+        void Report( std::ostream & os ) const;
+
     private:
 
         enum class FieldType {
@@ -54,6 +60,9 @@ class StatCommand : public Command {
 
 
 	private:
+
+        void SimpleStats(  ALib::CommandLine & cmd );
+        void FullStats(  ALib::CommandLine & cmd );
 
 		void OutputStats( IOManager & io, const std::string & fname,
 							int lines, int maxf, int minf,

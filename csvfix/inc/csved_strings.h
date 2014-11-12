@@ -151,6 +151,7 @@ const char * const FLAG_FILTBAD	= "-x";
 const char * const FLAG_FMT		= "-fmt";
 const char * const FLAG_FNAMES	= "-fn";
 const char * const FLAG_FSPRE	= "-fp";
+const char * const FLAG_FSTATS	= "-fs";
 const char * const FLAG_FSEXT	= "-fx";
 const char * const FLAG_FSDIR	= "-fd";
 const char * const FLAG_FREQ	= "-frq";
