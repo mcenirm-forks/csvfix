@@ -70,6 +70,29 @@ void RecordLengths( const CSVRow & row, std::vector <int> & lengths ) {
 
 int StatCommand :: Execute( ALib::CommandLine & cmd ) {
 
+    if ( cmd.HasFlag( FLAG_FSTATS ) ) {
+        FullStats( cmd );
+    }
+    else {
+        SimpleStats( cmd );
+    }
+	return 0;
+}
+
+
+//---------------------------------------------------------------------------
+// Full stats with field names, types etc.
+//---------------------------------------------------------------------------
+
+void StatCommand :: FullStats(  ALib::CommandLine & cmd ){
+}
+
+//---------------------------------------------------------------------------
+//Simple stats as per old version of stat command
+//---------------------------------------------------------------------------
+
+void StatCommand :: SimpleStats(  ALib::CommandLine & cmd ) {
+
 	IOManager io( cmd );
 
 	string filename;
@@ -92,7 +115,6 @@ int StatCommand :: Execute( ALib::CommandLine & cmd ) {
 	if ( filename != "" ) {
 		OutputStats( io, filename, lines, fmin, fmax, lengths );
 	}
-	return 0;
 }
 
 //----------------------------------------------------------------------------
@@ -113,6 +135,21 @@ void StatCommand :: OutputStats( IOManager & io, const string & fname,
 	io.WriteRow( row );
 }
 
+//---------------------------------------------------------------------------
+// FileStats records details about an individual file - name, field names and
+// individual field stats.
+//---------------------------------------------------------------------------
+
+
+FileStats :: FileStats( const string & filename, const CSVRow & fieldnames )
+    : mFileName( filename ), mFieldNames( fieldnames ) {
+}
+
+void FileStats :: AddRow( const CSVRow & row ) {
+}
+
+void FileStats:: Report( std::ostream & os ) const{
+}
 
 
 //----------------------------------------------------------------------------
