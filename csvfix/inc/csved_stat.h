@@ -11,8 +11,10 @@
 
 #include "a_base.h"
 #include "csved_command.h"
+#include "csved_ioman.h"
 #include <string>
 #include <vector>
+#include <climits>
 
 namespace CSVED {
 
@@ -24,7 +26,7 @@ class FileStats {
                     const CSVRow & fieldnames );
 
         void AddRow( const CSVRow & row );
-        void Report( std::ostream & os ) const;
+        void Report( IOManager & io ) const;
 
     private:
 
@@ -37,6 +39,11 @@ class FileStats {
             std::string mName;
             FieldType mType;
             int mMinLen, mMaxLen;
+
+            FieldRecord( const std::string & fieldname )
+                : mName( fieldname ), mType( FieldType::Empty ),
+                    mMinLen( INT_MAX ), mMaxLen( INT_MIN ){}
+
         };
 
         typedef std::vector <FieldRecord> FieldList;
