@@ -12,6 +12,7 @@
 #include "csved_stat.h"
 #include "csved_strings.h"
 #include <string>
+#include <memory>
 using std::string;
 
 namespace CSVED {
@@ -35,6 +36,8 @@ const char * const STAT_HELP = {
 	"produce record/field statistics for CSV files\n"
 	"usage: csvfix stat [flags] [file ...]\n"
 	"where flags are:\n"
+    "  -fs\t\tproduce full record stats (default is simplified output)\n"
+	"  -fn\t\tspecify that input contains a header record listing field names\n"
 	"#ALL"
 };
 
@@ -44,6 +47,8 @@ const char * const STAT_HELP = {
 
 StatCommand :: StatCommand( const string & name, const string & desc )
 				: Command( name, desc, STAT_HELP ) {
+    AddFlag( ALib::CommandLineFlag( FLAG_FSTATS, false, 0 ) );
+    AddFlag( ALib::CommandLineFlag( FLAG_FNAMES, false, 0 ) );
 }
 
 
@@ -63,10 +68,8 @@ void RecordLengths( const CSVRow & row, std::vector <int> & lengths ) {
 }
 
 //----------------------------------------------------------------------------
-// Stat the files in the IO manager, reporting file name, number of records
-// (not not number of lines!) and min and max field counts.
-// Now also output max lengths of all fields.
-//----------------------------------------------------------------------------
+// Produce full/simple file stats.
+// ---------------------------------------------------------------------------
 
 int StatCommand :: Execute( ALib::CommandLine & cmd ) {
 
@@ -85,10 +88,37 @@ int StatCommand :: Execute( ALib::CommandLine & cmd ) {
 //---------------------------------------------------------------------------
 
 void StatCommand :: FullStats(  ALib::CommandLine & cmd ){
+
+    bool usehead = cmd.HasFlag( FLAG_FNAMES );
+    string lastfile = "";
+
+    IOManager io( cmd );
+    CSVRow row;
+    std::shared_ptr <FileStats> stats;
+
+    while( io.ReadCSV( row ) ) {
+        if ( io.CurrentFileName() != lastfile ) {
+            if ( lastfile != "" ) {
+                stats->Report( io );
+            }
+            lastfile = io.CurrentFileName();
+            stats = std::shared_ptr<FileStats>(
+                        new FileStats( lastfile, usehead ? row : CSVRow() )
+                    );
+            if ( usehead ) {
+                continue;
+            }
+        }
+        stats->AddRow( row );
+    }
+    stats->Report( io );
 }
 
 //---------------------------------------------------------------------------
-//Simple stats as per old version of stat command
+// Simple stats as per old version of stat command.
+// Stat the files in the IO manager, reporting file name, number of records
+// (not not number of lines!) and min and max field counts.
+// Now also output max lengths of all fields.
 //---------------------------------------------------------------------------
 
 void StatCommand :: SimpleStats(  ALib::CommandLine & cmd ) {
@@ -146,9 +176,29 @@ FileStats :: FileStats( const string & filename, const CSVRow & fieldnames )
 }
 
 void FileStats :: AddRow( const CSVRow & row ) {
+    for ( unsigned int i = 0; i < row.size(); i++ ) {
+        if ( i >= mFieldNames.size() ) {
+            mFieldNames.push_back( ALib::Str( i + 1 ) );
+        }
+        if ( i >= mFields.size() ) {
+            mFields.push_back( FieldRecord( mFieldNames[i] ));
+        }
+        int len = row[i].size();
+        mFields[i].mMinLen = std::min( len, mFields[i].mMinLen );
+        mFields[i].mMaxLen = std::max( len, mFields[i].mMaxLen );
+    }
 }
 
-void FileStats:: Report( std::ostream & os ) const{
+void FileStats:: Report( IOManager & io ) const {
+    for ( unsigned int i = 0; i < mFields.size(); i++ ) {
+        CSVRow row;
+        row.push_back( mFileName );
+        row.push_back( mFieldNames[i] );
+        row.push_back( "TYPE" );
+        row.push_back( ALib::Str( mFields[i].mMinLen ) );
+        row.push_back( ALib::Str( mFields[i].mMaxLen ) );
+        io.WriteRow( row );
+    }
 }
 
 
