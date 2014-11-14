@@ -184,17 +184,19 @@ void FileStats :: AddRow( const CSVRow & row ) {
             mFields.push_back( FieldRecord( mFieldNames[i] ));
         }
         int len = row[i].size();
+        mFields[i].mType = Transition( mFields[i].mType, row[i] );
         mFields[i].mMinLen = std::min( len, mFields[i].mMinLen );
         mFields[i].mMaxLen = std::max( len, mFields[i].mMaxLen );
     }
 }
+
 
 void FileStats:: Report( IOManager & io ) const {
     for ( unsigned int i = 0; i < mFields.size(); i++ ) {
         CSVRow row;
         row.push_back( mFileName );
         row.push_back( mFieldNames[i] );
-        row.push_back( "TYPE" );
+        row.push_back( FT2Str( mFields[i].mType ) );
         row.push_back( ALib::Str( mFields[i].mMinLen ) );
         row.push_back( ALib::Str( mFields[i].mMaxLen ) );
         io.WriteRow( row );
