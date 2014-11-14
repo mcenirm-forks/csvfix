@@ -31,8 +31,38 @@ class FileStats {
     private:
 
         enum class FieldType {
-            Empty, String, Number, Real, Date
+            Empty, String, Number, Date
         };
+
+        std::string FT2Str( FieldType t ) const {
+            switch( t ) {
+                case FieldType::Empty:   return "empty";
+                case FieldType::String:  return "string";
+                case FieldType::Number:  return "number";
+                case FieldType::Date:    return "date";
+                default:                 return "unknown";
+            }
+        }
+
+        FieldType Transition( FieldType t, const std::string & s ) {
+            if ( ALib::IsEmpty( s ) || t == FieldType::String ) {
+                return t;
+            }
+            else if ( t == FieldType::Empty ) {
+                if ( ALib::IsNumber(s) ) {
+                    return FieldType::Number;
+                }
+                else {
+                    return FieldType::String;
+                }
+            }
+            else if ( t == FieldType::Number && ALib::IsNumber(s) ) {
+                return FieldType::Number;
+            }
+            else {
+                return FieldType::String;
+            }
+        }
 
 
         struct FieldRecord {
