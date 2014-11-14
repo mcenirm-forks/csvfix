@@ -10,7 +10,7 @@ For further information, please see the CSVfix website
 at http://neilb.bitbucket.org/csvfix/
 
 Neil Butterworth
-13-Apr-2014
+13-Nov-2014
 
 
 
