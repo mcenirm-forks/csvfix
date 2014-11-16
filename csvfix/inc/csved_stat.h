@@ -25,13 +25,13 @@ class FileStats {
         FileStats( const std::string & filename,
                     const CSVRow & fieldnames );
 
-        void AddRow( const CSVRow & row );
+        void UpdateStats( const CSVRow & row );
         void Report( IOManager & io ) const;
 
     private:
 
         enum class FieldType {
-            Empty, String, Number, Date
+            Empty, String, Number
         };
 
         std::string FT2Str( FieldType t ) const {
@@ -39,7 +39,6 @@ class FileStats {
                 case FieldType::Empty:   return "empty";
                 case FieldType::String:  return "string";
                 case FieldType::Number:  return "number";
-                case FieldType::Date:    return "date";
                 default:                 return "unknown";
             }
         }

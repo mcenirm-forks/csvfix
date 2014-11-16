@@ -91,7 +91,6 @@ void StatCommand :: FullStats(  ALib::CommandLine & cmd ){
 
     bool usehead = cmd.HasFlag( FLAG_FNAMES );
     string lastfile = "";
-
     IOManager io( cmd );
     CSVRow row;
     std::shared_ptr <FileStats> stats;
@@ -102,14 +101,12 @@ void StatCommand :: FullStats(  ALib::CommandLine & cmd ){
                 stats->Report( io );
             }
             lastfile = io.CurrentFileName();
-            stats = std::shared_ptr<FileStats>(
-                        new FileStats( lastfile, usehead ? row : CSVRow() )
-                    );
+            stats = std::make_shared<FileStats>( lastfile, usehead ? row : CSVRow() );
             if ( usehead ) {
                 continue;
             }
         }
-        stats->AddRow( row );
+        stats->UpdateStats( row );
     }
     stats->Report( io );
 }
@@ -124,11 +121,11 @@ void StatCommand :: FullStats(  ALib::CommandLine & cmd ){
 void StatCommand :: SimpleStats(  ALib::CommandLine & cmd ) {
 
 	IOManager io( cmd );
-
 	string filename;
 	int lines = 0, fmin = INT_MAX, fmax = 0;
 	CSVRow row;
     std::vector <int> lengths;
+
 	while( io.ReadCSV( row ) ) {
 		if ( filename != io.CurrentFileName() ) {
 			if ( filename != "" ) {
@@ -142,6 +139,7 @@ void StatCommand :: SimpleStats(  ALib::CommandLine & cmd ) {
 		fmin = std::min( fmin, (int) row.size() );
 		fmax = std::max( fmax, (int) row.size() );
 	}
+
 	if ( filename != "" ) {
 		OutputStats( io, filename, lines, fmin, fmax, lengths );
 	}
@@ -175,7 +173,11 @@ FileStats :: FileStats( const string & filename, const CSVRow & fieldnames )
     : mFileName( filename ), mFieldNames( fieldnames ) {
 }
 
-void FileStats :: AddRow( const CSVRow & row ) {
+//---------------------------------------------------------------------------
+// Update detailed statistics with contents of a row.
+//---------------------------------------------------------------------------
+
+void FileStats :: UpdateStats( const CSVRow & row ) {
     for ( unsigned int i = 0; i < row.size(); i++ ) {
         if ( i >= mFieldNames.size() ) {
             mFieldNames.push_back( ALib::Str( i + 1 ) );
@@ -190,6 +192,9 @@ void FileStats :: AddRow( const CSVRow & row ) {
     }
 }
 
+//---------------------------------------------------------------------------
+// Report accumulated detailed statistics.
+//---------------------------------------------------------------------------
 
 void FileStats:: Report( IOManager & io ) const {
     for ( unsigned int i = 0; i < mFields.size(); i++ ) {
