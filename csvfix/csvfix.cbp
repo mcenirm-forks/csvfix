@@ -356,6 +356,7 @@
 		<Unit filename="tests/tests/src2test/csved_diff.cpp.test" />
 		<Unit filename="tests/tests/src2test/csved_fromxml.cpp.test" />
 		<Unit filename="tests/tests/src2test/csved_join.cpp.test" />
+		<Unit filename="tests/tests/stat.test" />
 		<Unit filename="tests/tests/template.test" />
 		<Unit filename="tests/tests/toxml.test" />
 		<Unit filename="tests/tests/trim.test" />
