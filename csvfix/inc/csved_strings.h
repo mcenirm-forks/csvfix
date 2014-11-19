@@ -163,6 +163,7 @@ const char * const FLAG_HEADEXP	= "-me";
 const char * const FLAG_HDRREC	= "-hdr";
 const char * const FLAG_ICASE	= "-ic";
 const char * const FLAG_IF		= "-if";
+const char * const FLAG_IGNOREX	= "-ix";
 const char * const FLAG_ICNAMES	= "-ifn";
 const char * const FLAG_ILTEXT	= "-ilt";
 const char * const FLAG_INC		= "-i";
