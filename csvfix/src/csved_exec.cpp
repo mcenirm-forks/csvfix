@@ -36,6 +36,7 @@ const char * const EXEC_HELP = {
 	"where flags are:\n"
 	"  -c cmd\tcommand line to execute\n"
 	"  -r\t\treplace CSV input with command output\n"
+    "  -ix ecode\tignore exit codes from cmd with values less than or equal to ecode\n"
 	"#ALL,SKIP,PASS"
 };
 
