@@ -49,6 +49,7 @@ ExecCommand ::ExecCommand( const string & name,
 
 	AddFlag( ALib::CommandLineFlag( FLAG_CMD, true, 1 ) );
 	AddFlag( ALib::CommandLineFlag( FLAG_REPLACE, false, 0 ) );
+	AddFlag( ALib::CommandLineFlag( FLAG_IGNOREX, false, 1 ) );
 }
 
 //---------------------------------------------------------------------------
@@ -65,6 +66,12 @@ int ExecCommand :: Execute( ALib::CommandLine & cmd ) {
 	}
 	bool csv = ! cmd.HasFlag( FLAG_REPLACE );
 
+    string ix = cmd.GetValue( FLAG_IGNOREX, "0" );
+    if ( ! ALib::IsInteger( ix ) ) {
+        CSVTHROW( "Invalid value for " << FLAG_IGNOREX << ": " << ix );
+    }
+    int nix = ALib::ToInteger( ix );
+
 	IOManager io( cmd );
 	CSVRow row;
 	ALib::Executor ex;
@@ -74,7 +81,7 @@ int ExecCommand :: Execute( ALib::CommandLine & cmd ) {
 			continue;
 		}
 		string cmd = MakeCmd( row );
-		std::istream & is = ex.Exec( cmd );
+		std::istream & is = ex.Exec( cmd, nix );
 		if ( ! is ) {
 			CSVTHROW( "Command execution error" );
 		}
