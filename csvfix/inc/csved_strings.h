@@ -123,6 +123,7 @@ const char * const FLAG_CSVSEP	= "-sep";
 const char * const FLAG_CSVSEPR	= "-rsep";
 const char * const FLAG_DUPES	= "-d";
 const char * const FLAG_DATE	= "-d";
+const char * const FLAG_DEBUG	= "-d";
 const char * const FLAG_DISCARD	= "-d";
 const char * const FLAG_DETAIL	= "-d";
 const char * const FLAG_DESC	= "-d";
