@@ -4,6 +4,8 @@ else
 	CLEAN = cmd.exe /c "clean.cmd"
 endif
 
+SHELL := bash
+
 default:
 	@echo "use 'make win', 'make lin' or 'make mac'"
 
