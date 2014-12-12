@@ -1,50 +1,65 @@
-# makefile for alib
-# Copyright (C) 2009 Neil Butterworth
+PRODUCT := alib.a
+BINDIR := lib
+SHELL := bash
+INCDIR := inc
+SRCDIR := src
+EXPDIR := expat
+OBJDIR := obj
+CXX := g++
+INCDIRS := -I$(INCDIR) -I$(EXPDIR)
+CXXFLAGS := 
 
-OUT = lib/alib.a
-CCTYPE = gcc
-IDIR = inc
-ODIR = obj
-XDIR = expat
-SDIR = src
-INC = -Iinc -Iexpat
+WINSPEC := $(SRCDIR)/a_db.cpp $(SRCDIR)/a_dir.cpp $(SRCDIR)/a_opsys.cpp $(SRCDIR)/a_winerr.cpp $(SRCDIR)/a_winenv.cpp
+LINSPEC := $(SRCDIR)/a_linenv.cpp
 
-cc.gcc = g++
-cc.clang = clang++ -std=c++11 -stdlib=libc++  
-CC = ${cc.${CCTYPE}}
+ALLSRC := $(wildcard $(SRCDIR)/*.cpp)  
+WINSRC := $(filter-out $(LINSPEC),$(ALLSRC))
+LINSRC := $(filter-out $(WINSPEC),$(ALLSRC))
+EXPSRC := $(wildcard $(EXPDIR)/*.cpp)
 
-_OBJS = a_chsrc.o a_csv.o a_enc.o a_env.o a_except.o \
-		a_expr.o a_myth.o a_inifile.o  a_exec.o \
-		a_file.o a_html.o a_io.o a_rand.o a_time.o \
-		a_regex.o a_shstr.o a_slice.o a_sort.o a_str.o a_table.o \
-		a_xmlevents.o a_xmlparser.o a_xmltree.o \
-		a_date.o a_range.o 
+WINOBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(WINSRC))
+LINOBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(LINSRC))
+EXPOBJS := $(patsubst $(EXPDIR)/%.cpp,$(OBJDIR)/%.o,$(EXPSRC))
+WINDEPS := $(patsubst $(OBJDIR)/%.o,$(OBJDIR)/%.d,$(WINOBJS))
+LINDEPS := $(patsubst $(OBJDIR)/%.o,$(OBJDIR)/%.d,$(LINOBJS))
+EXPDEPS := $(patsubst $(OBJDIR)/%.o,$(OBJDIR)/%.d,$(EXPOBJS))
 
+win: $(WINOBJS) $(EXPOBJS) 
+	ar rvs $(BINDIR)/$(PRODUCT) $^
 
-OBJS = $(patsubst %,$(ODIR)/%,$(_OBJS))
+lin: $(LINOBJS) $(EXPOBJS)
+	ar rvs $(BINDIR)/$(PRODUCT) $^
 
-_WINOBJS = a_db.o a_dir.o a_opsys.o a_winerr.o a_winenv.o
-WINOBJS = $(patsubst %,$(ODIR)/%,$(_WINOBJS))
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $(INCDIRS) -c $< -o $@
 
-_LINOBJS = a_linenv.o
-LINOBJS = $(patsubst %,$(ODIR)/%,$(_LINOBJS))
+$(OBJDIR)/%.o: $(EXPDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $(INCDIRS) -c $< -o $@
 
-_EXPAT = xmlparse.o  xmlrole.o  xmltok.o  xmltok_impl.o  xmltok_ns.o
-EXPAT = $(patsubst %,$(ODIR)/%,$(_EXPAT))
-
-$(ODIR)/%.o: $(SDIR)/%.cpp $(IDIR)/%.h 
-	$(CC) -c $(INC) $(CFLAGS) -o $@ $< 
-
-$(ODIR)/%.o: $(XDIR)/%.cpp 
-	$(CC) -c $(INC) $(CFLAGS) -o $@ $< 
-
-win: $(OBJS) $(EXPAT) $(WINOBJS)
-	ar rvs $(OUT) $^
-
-lin: $(OBJS) $(EXPAT)  $(LINOBJS)
-	ar rvs $(OUT) $^
-
-.PHONY: clean
+# Clean the project by removing .o files, and executable.
 clean:
-	rm -rf lib/* obj/*  
+	rm -f $(OBJDIR)/*.o $(BINDIR)/$(PRODUCT)
+
+# Remove any dependency files and rebuild all dependencies
+depends:
+	rm -f $(OBJDIR)/*.d
+	$(MAKE) $(DEPFILES)
+
+$(OBJDIR)/%.d: $(SRCDIR)/%.cpp
+	$(CXX) $(INCDIRS) -MM $< \
+	  | tr '\\\n\r' ' ' \
+	  | sed -e 's%^%$@ %' -e 's% % $(OBJDIR)/%'\
+	  > $@
+
+$(OBJDIR)/%.d: $(EXPDIR)/%.cpp
+	$(CXX) $(INCDIRS) -MM $< \
+	  | tr '\\\n\r' ' ' \
+	  | sed -e 's%^%$@ %' -e 's% % $(OBJDIR)/%'\
+	  > $@
+
+-include $(WINDEPS)
+-include $(EXPDEPS)
+-include $(LINDEPS)
+
+# end
 
