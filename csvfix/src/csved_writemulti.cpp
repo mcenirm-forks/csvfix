@@ -175,7 +175,7 @@ void WriteMultiCommand :: ProcessFlags( const ALib::CommandLine & cmd ) {
 	CommaListToIndex( dl, mDetail );
 
     mHaveRecSep = cmd.HasFlag( FLAG_RECSEP );
-    mRecSep = cmd.GetValue( FLAG_RECSEP, "" );
+    mRecSep = ALib::UnEscape( cmd.GetValue( FLAG_RECSEP, "" ) );
 
 }
 
